@@ -248,3 +248,7 @@ Thumbs.db
 *.tar.bz2
 *.tar
 *.7z
+
+
+*.DS_Store
+.DS_Store
