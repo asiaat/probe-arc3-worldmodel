@@ -1,0 +1,78 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "arcwm"
+version = "0.1.0"
+description = "Model-based RL agent for ARC-AGI-3"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { file = "LICENSE" }
+authors = [
+    { name = "Kalle Olumets", email = "olumetskalle@gmail.com" }
+]
+keywords = ["reinforcement-learning", "world-models", "arc-agi", "planning"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3.12",
+]
+
+dependencies = [
+    # Core ML
+    "torch>=2.2,<3.0",
+    "numpy>=1.26,<2.0",
+    "pillow>=10.0",
+
+    # ARC-AGI-3 SDK
+    "arc-agi>=0.1.0",
+
+    # Config and logging
+    "pyyaml>=6.0",
+    "python-dotenv>=1.0",
+    "tqdm>=4.66",
+
+    # Storage
+    "zstandard>=0.22",  # compressed replay buffer
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=4.1",
+    "ruff>=0.3",
+    "black>=24.0",
+    "mypy>=1.9",
+    "ipython>=8.0",
+    "jupyter>=1.0",
+]
+track = [
+    "wandb>=0.16",
+    "tensorboard>=2.16",
+]
+
+[project.scripts]
+arcwm-collect = "scripts.collect_data:main"
+arcwm-baselines = "scripts.fetch_baselines:main"
+arcwm-eval = "arcwm.eval:main"
+
+[tool.setuptools]
+packages = ["arcwm", "arcwm.env", "arcwm.models", "arcwm.planning",
+            "arcwm.training", "arcwm.utils"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "C4"]
+ignore = ["E501"]  # line length handled by formatter
+
+[tool.black]
+line-length = 100
+target-version = ["py312"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
