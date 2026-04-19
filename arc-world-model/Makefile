@@ -1,4 +1,4 @@
-.PHONY: help setup test fetch-baselines collect-data buffer-stats lint format clean
+.PHONY: help setup test fetch-baselines collect-data buffer-stats train-wm lint format clean
 
 # Load .env if present
 -include .env
@@ -19,6 +19,9 @@ help:
 	@echo "  make fetch-baselines  Fetch real human baselines from SDK scorecard"
 	@echo "  make collect-data     Collect random-policy transitions into replay buffer"
 	@echo "  make buffer-stats     Show statistics of the replay buffer"
+	@echo ""
+	@echo "Week 2 — World model:"
+	@echo "  make train-wm         Train VAE + transition model"
 	@echo ""
 	@echo "Quality:"
 	@echo "  make lint             Run ruff linter"
@@ -49,6 +52,13 @@ collect-data:
 
 buffer-stats:
 	$(BIN)/python -m arcwm.env.replay_buffer stats --path $(DATA_DIR)/replay
+
+train-wm:
+	$(BIN)/python scripts/train_world_model.py \
+	    --buffer-path $(DATA_DIR)/replay \
+	    --epochs 10 \
+	    --batch-size 64 \
+	    --latent-dim 64
 
 lint:
 	$(BIN)/ruff check arcwm/ scripts/ tests/
